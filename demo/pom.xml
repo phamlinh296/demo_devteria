@@ -28,6 +28,7 @@
 	</scm>
 <!--	thử sửa đoạn này, hạ jdk 21->11 -->
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
@@ -60,12 +61,18 @@
 			<scope>provided</scope> <!-- Processor chỉ cần trong quá trình biên dịch -->
 		</dependency>
 
-		<!-- Lombok -->
+		<!-- Lombok, lưu ý là phiên bản mới này ms chạy đc jdk21-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.28</version>
+			<version>1.18.32</version>
 			<scope>provided</scope> <!-- Lombok chỉ cần trong quá trình biên dịch -->
+		</dependency>
+
+<!--			mã hóa mk bycrypt-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
 
 
@@ -105,10 +112,11 @@
 							<version>1.5.5.Final</version>
 						</path>
 						<!-- Lombok -->
+
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.28</version>
+							<version>1.18.32</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

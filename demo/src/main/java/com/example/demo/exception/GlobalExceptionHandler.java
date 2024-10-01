@@ -1,6 +1,6 @@
 package com.example.demo.exception;
 
-import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.request.ApiResponse;
 import com.example.demo.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 //    }
 
     //app exception - trả về code tùy chỉnh
-    @ExceptionHandler(value = AppException.class)
+    @ExceptionHandler(value = AppException.class)//bắt laoij ex này khi service ném ra
     ResponseEntity<ApiResponse> handlingAppException(AppException exception){//trả về phản hồi là 1 apiresponse dạng json, chứa message là ex.
         ApiResponse<User> apiResponse=new ApiResponse<>();
 
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    // ex khi ko thỏa mãn valid (đủ số kí tự..) //ko đc để đồng thời cái này vs cái dưới, k thì lỗi. Tsao?????
+    // ex khi ko thỏa mãn valid (đủ số kí tự..) //ko đc để đồng thời cái này vs cái dưới, k thì lỗi. vì bắt cùng 1 exception
 //    @ExceptionHandler(value = MethodArgumentNotValidException.class)
 //    ResponseEntity<String> handlingValidation(MethodArgumentNotValidException exception){
 //        return ResponseEntity.badRequest().body(exception.getFieldError().getDefaultMessage());
@@ -59,11 +59,13 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse> handlingValidationApi (MethodArgumentNotValidException exception){
         ApiResponse<User> apiResponse= new ApiResponse<>();
 
-        String enumKey= exception.getFieldError().getDefaultMessage();//lấy thông điệp lỗi
+        String enumKey= exception.getFieldError().getDefaultMessage();//lấy thông điệp lỗi. vd @NotNull(message = "NAME_IS_NULL") thì in ra 'NAME_IS_NULL"
         ErrorCode errorCode= ErrorCode.INVALID_KEY;//gán lỗi type vào error trc khi error nhận các gtri lỗi khác
 //nếu error nhận các lỗi khác thì chạy bthg, nếu lỗi type thì valueof() gây lỗi và phải catch lại lỗi đó
         try {
-            errorCode= ErrorCode.valueOf(enumKey);//pthuc valueOf() có sẵn vs đtg enum; lấy ra hằng số enum có tên trùng với chuỗi được cung cấp. Nếu chuỗi không khớp với bất kỳ hằng số nào, Java sẽ ném ra ngoại lệ IllegalArgumentException.
+            errorCode= ErrorCode.valueOf(enumKey);//pthuc valueOf() có sẵn vs đtg enum; >> phải để message trùng với tên lỗi trong enum (thì ad Enum.valueOf() mới đúng)(neu k de trùng thì phải viết thêm class ánh xạ)
+            // lấy ra hằng số enum có tên trùng với chuỗi được cung cấp.
+            // Nếu chuỗi không khớp với bất kỳ hằng số nào, Java sẽ ném ra ngoại lệ IllegalArgumentException.
         } catch (IllegalArgumentException argumentException){
 
         }
